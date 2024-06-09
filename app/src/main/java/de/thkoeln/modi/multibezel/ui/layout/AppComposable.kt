@@ -11,7 +11,7 @@ fun AppComposable(){
 
     SwipeDismissableNavHost(
         navController = swipeDismissibleNavController,
-        startDestination = Screen.Welcome.route
+        startDestination = Screen.MusicPlayer.route
     ) {
         composable(route = Screen.Welcome.route){
             Welcome()

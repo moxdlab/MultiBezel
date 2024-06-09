@@ -9,6 +9,10 @@ activityCompose = "1.9.0"
 coreSplashscreen = "1.0.1"
 composeNavigation = "1.4.0-beta02"
 lifecycleViewmodelAndroid = "2.8.1"
+horologistMediaUi = "0.6.13"
+horologistMediaData = "0.6.13"
+media3Exoplayer = "1.4.0-alpha02"
+horologistAudioUi = "0.6.13"
 
 [libraries]
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
@@ -24,6 +28,10 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 compose-navigation = { group = "androidx.wear.compose", name = "compose-navigation", version.ref = "composeNavigation" }
 lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycleViewmodelAndroid" }
+horologist-media-ui = { group = "com.google.android.horologist", name = "horologist-media-ui", version.ref = "horologistMediaUi" }
+horologist-media-data = { group = "com.google.android.horologist", name = "horologist-media-data", version.ref = "horologistMediaData" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3Exoplayer" }
+horologist-audio-ui = { group = "com.google.android.horologist", name = "horologist-audio-ui", version.ref = "horologistAudioUi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
