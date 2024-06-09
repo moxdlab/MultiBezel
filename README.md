@@ -1,0 +1,3 @@
+**MultiBezel: Adding Multi-Touch to a Smartwatch Bezel to control music**
+
+This research project deals with the development of "MultiBezel", an innovative multi-touch capable bezel for smartwatches, which aims to make music control more efficient and minimize the problem of screen occlusion - a frequent point of criticism when using conventional touch controls. “MultiBezel” introduces a gesture-based scheme where different finger combinations correspond to specific music functions. The research focuses on the question of how the integration of such a multi-touch bezel affects the user experience and efficiency when using music applications compared to conventional control methods.
