@@ -10,7 +10,8 @@ class CustomMusicPlayerViewModel : ViewModel() {
 
 
     fun initMediaPlayer(context: Context) {
-        _musicPlayer.value = MusicPlayer(context.assets)
+        if(_musicPlayer.value == null)
+            _musicPlayer.value = MusicPlayer(context.assets)
     }
 
     fun playPause(){

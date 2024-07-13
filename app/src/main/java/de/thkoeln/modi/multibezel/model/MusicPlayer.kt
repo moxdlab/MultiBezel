@@ -15,7 +15,7 @@ class MusicPlayer(private val assetManager: AssetManager) {
         if (songs.isNotEmpty()) {
             currentSongIndex = 0
             prepareSong(songs[currentSongIndex])
-            mediaPlayer.setOnCompletionListener { nextSong() }
+            //mediaPlayer.setOnCompletionListener { nextSong() }
         }
     }
 
@@ -49,13 +49,13 @@ class MusicPlayer(private val assetManager: AssetManager) {
     }
 
     fun play() {
-        if (!mediaPlayer.isPlaying) {
+        if (!isPlaying()) {
             mediaPlayer.start()
         }
     }
 
     fun pause() {
-        if (mediaPlayer.isPlaying) {
+        if (isPlaying()) {
             mediaPlayer.pause()
         }
     }
@@ -67,12 +67,14 @@ class MusicPlayer(private val assetManager: AssetManager) {
 
     fun nextSong() {
         currentSongIndex = (currentSongIndex + 1) % songs.size
+        stop()
         prepareSong(songs[currentSongIndex])
         play()
     }
 
     fun previousSong() {
         currentSongIndex = (currentSongIndex - 1 + songs.size) % songs.size
+        stop()
         prepareSong(songs[currentSongIndex])
         play()
     }
