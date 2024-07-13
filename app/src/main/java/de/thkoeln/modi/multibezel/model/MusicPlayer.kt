@@ -3,19 +3,36 @@ package de.thkoeln.modi.multibezel.model
 import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
-class MusicPlayer(private val assetManager: AssetManager) {
+class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var currentSongIndex: Int = 0
-    val songs: MutableList<String> = mutableListOf()
+    private val songs: MutableList<Song> = mutableListOf()
+
+    private val _currentSong = MutableLiveData<Song?>(null)
+    val currentSong: LiveData<Song?> = _currentSong
+
+    private val _progress = MutableLiveData(0f)
+    val progress: LiveData<Float> = _progress
+
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    private var progressJob: Job? = null
 
     init {
         loadSongsFromAssets()
         if (songs.isNotEmpty()) {
             currentSongIndex = 0
+            _currentSong.postValue(songs[currentSongIndex])
             prepareSong(songs[currentSongIndex])
-            //mediaPlayer.setOnCompletionListener { nextSong() }
         }
     }
 
@@ -24,7 +41,18 @@ class MusicPlayer(private val assetManager: AssetManager) {
             val assetFiles = assetManager.list("")
             assetFiles?.forEach { fileName ->
                 if (fileName.endsWith(".mp3", true)) {
-                    songs.add(fileName)
+                    val pattern = Regex("(.+) - (.+) \\[.+\\]\\.mp3")
+                    val matchResult = pattern.find(fileName)
+
+                    val song = if (matchResult != null) {
+                        val title = matchResult.groups[2]?.value ?: "Unknown Title"
+                        val artist = matchResult.groups[1]?.value ?: "Unknown Artist"
+                        Song(title, artist, fileName)
+                    } else {
+                        Song(fileName, "Unknown Artist", fileName)
+                    }
+
+                    songs.add(song)
                 }
             }
         } catch (e: Exception) {
@@ -32,15 +60,20 @@ class MusicPlayer(private val assetManager: AssetManager) {
         }
     }
 
-    private fun prepareSong(songName: String) {
+    private fun prepareSong(song: Song) {
         try {
             mediaPlayer.reset()
-            val assetFileDescriptor = assetManager.openFd(songName)
+            val assetFileDescriptor = assetManager.openFd(song.filePath)
             mediaPlayer.setDataSource(
                 assetFileDescriptor.fileDescriptor,
                 assetFileDescriptor.startOffset,
                 assetFileDescriptor.length
             )
+            _currentSong.value = song
+            mediaPlayer.setOnCompletionListener {
+                stopProgressUpdates()
+                nextSong()
+            }
             assetFileDescriptor.close()
             mediaPlayer.prepare()
         } catch (e: Exception) {
@@ -48,38 +81,64 @@ class MusicPlayer(private val assetManager: AssetManager) {
         }
     }
 
-    fun play() {
-        if (!isPlaying()) {
-            mediaPlayer.start()
+    private fun startProgressUpdates() {
+        progressJob?.cancel()
+        progressJob = scope.launch {
+            while (isActive) {
+                if (mediaPlayer.isPlaying) {
+                    val currentPosition = mediaPlayer.currentPosition.toFloat()
+                    val totalDuration = mediaPlayer.duration.toFloat()
+                    val progress = if (totalDuration > 0) currentPosition / totalDuration else 0f
+                    _progress.value = progress
+                }
+                delay(100)
+            }
         }
     }
 
-    fun pause() {
+
+    private fun stopProgressUpdates() {
+        progressJob?.cancel()
+    }
+
+    override fun play() {
+        if (!isPlaying()) {
+            try {
+                startProgressUpdates()
+                mediaPlayer.start()
+            } catch (e: Exception) {
+                Log.e("MusicPlayer", "Error playing song: ${e.message}")
+            }
+        }
+    }
+
+    override fun pause() {
         if (isPlaying()) {
+            stopProgressUpdates()
             mediaPlayer.pause()
         }
     }
 
-    fun stop() {
+    override fun stop() {
+        stopProgressUpdates()
+        _progress.postValue(0F)
         mediaPlayer.stop()
         mediaPlayer.reset()
     }
 
-    fun nextSong() {
+    override fun nextSong() {
         currentSongIndex = (currentSongIndex + 1) % songs.size
         stop()
         prepareSong(songs[currentSongIndex])
-        play()
     }
 
-    fun previousSong() {
+    override fun previousSong() {
         currentSongIndex = (currentSongIndex - 1 + songs.size) % songs.size
         stop()
         prepareSong(songs[currentSongIndex])
-        play()
     }
 
-    fun isPlaying(): Boolean {
+    override fun isPlaying(): Boolean {
         return mediaPlayer.isPlaying
     }
 

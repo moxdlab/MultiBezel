@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,18 +28,19 @@ import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
 
 @Composable
 fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewModel = viewModel()) {
-    customMusicPlayerViewModel.initMediaPlayer(LocalContext.current)
-    var isPlaying by remember { mutableStateOf(false) }
+    customMusicPlayerViewModel.initMusicPlayer(LocalContext.current)
+    val isPlaying by customMusicPlayerViewModel.isPlaying.observeAsState(false)
+    val progress by customMusicPlayerViewModel.progress.observeAsState(0F)
+    val song by customMusicPlayerViewModel.currentSong.observeAsState()
 
     CustomMusicPlayerScreen(
-        songTitle = "Africa",
-        artist = "Toto",
+        songTitle = song?.title ?: "unknown",
+        artist = song?.artist ?: "unknown",
         onPlayPauseClick = {
             customMusicPlayerViewModel.playPause()
-            isPlaying = !isPlaying
         },
-        isPlaying = isPlaying,
-        progress = 0.5f,
+        isPlaying = isPlaying ?: false,
+        progress = progress,
         onPreviousClick = { customMusicPlayerViewModel.onPreviousSong() },
         onNextClick = { customMusicPlayerViewModel.onNextSong() }
     )

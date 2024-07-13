@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.hilt.lifecycle.viewmodel)
     implementation(libs.media3.session)
     implementation(libs.material3.android)
+    implementation(libs.runtime.livedata)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)

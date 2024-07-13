@@ -1,32 +1,51 @@
 package de.thkoeln.modi.multibezel.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.thkoeln.modi.multibezel.model.MusicPlayer
+import de.thkoeln.modi.multibezel.model.MusicPlayerActions
+import de.thkoeln.modi.multibezel.model.Song
 
 class CustomMusicPlayerViewModel : ViewModel() {
-    private val _musicPlayer: MutableLiveData<MusicPlayer> = MutableLiveData(null)
+    private val _musicPlayerActions: MutableLiveData<MusicPlayerActions> = MutableLiveData(null)
+    val musicPlayerActions: LiveData<MusicPlayerActions> = _musicPlayerActions
 
+    private val _currentSong: MutableLiveData<Song?> = MutableLiveData(null)
+    val currentSong: LiveData<Song?> = _currentSong
 
-    fun initMediaPlayer(context: Context) {
-        if(_musicPlayer.value == null)
-            _musicPlayer.value = MusicPlayer(context.assets)
+    private val _progress: MutableLiveData<Float> = MutableLiveData(0F)
+    val progress: LiveData<Float> = _progress
+
+    private val _isPlaying: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isPlaying: LiveData<Boolean?> = _isPlaying
+
+    fun initMusicPlayer(context: Context) {
+        if (_musicPlayerActions.value == null) {
+            val musicPlayer = MusicPlayer(context.assets)
+            _musicPlayerActions.value = musicPlayer
+            musicPlayer.currentSong.observeForever { _currentSong.value = it }
+            musicPlayer.progress.observeForever { _progress.value = it }
+        }
     }
 
-    fun playPause(){
-        if(_musicPlayer.value?.isPlaying() == true)
-            _musicPlayer.value?.pause()
-        else
-            _musicPlayer.value?.play()
+    fun playPause() {
+        if (_musicPlayerActions.value?.isPlaying() == true) {
+            _isPlaying.postValue(false)
+            _musicPlayerActions.value?.pause()
+        } else {
+            _isPlaying.postValue(true)
+            _musicPlayerActions.value?.play()
+        }
     }
 
-    fun onNextSong(){
-        _musicPlayer.value?.nextSong()
+    fun onNextSong() {
+        _musicPlayerActions.value?.nextSong()
     }
 
-    fun onPreviousSong(){
-        _musicPlayer.value?.previousSong()
+    fun onPreviousSong() {
+        _musicPlayerActions.value?.previousSong()
     }
 }
 
