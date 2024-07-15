@@ -42,10 +42,18 @@ class CustomMusicPlayerViewModel : ViewModel() {
 
     fun onNextSong() {
         _musicPlayerActions.value?.nextSong()
+        _isPlaying.postValue(true)
     }
 
     fun onPreviousSong() {
         _musicPlayerActions.value?.previousSong()
+        _isPlaying.postValue(true)
+    }
+    fun increaseSpeed() {
+        _musicPlayerActions.value?.changeSpeed(0.10f)
+    }
+    fun increasePitch() {
+        _musicPlayerActions.value?.changePitch(0.10f)
     }
 }
 

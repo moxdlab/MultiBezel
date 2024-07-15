@@ -79,12 +79,34 @@ fun MusicControlCircularProgressBarPreview() {
 }
 
 @Composable
+fun IncreaseSpeedButton(modifier: Modifier = Modifier, onIncreaseClick: () -> Unit) {
+    IconButton(
+        modifier = modifier,
+        onClick = { onIncreaseClick() }
+    ) {
+        Icon(
+            painterResource(id = R.drawable.baseline_fast_forward_24),
+            contentDescription = "Increase",
+            tint = Color.White,
+            modifier = Modifier.size(80.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IncreaseSpeedButtonPreview() {
+    IncreaseSpeedButton {}
+}
+
+@Composable
 fun MusicPlayerControls(
     isPlaying: Boolean,
     progress: Float,
     onPlayPauseClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onIncreaseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -121,7 +143,7 @@ fun MusicPlayerControls(
     }
 }
 
-@Preview(device = "id:wear_round_360_300dpi", showSystemUi = false, showBackground = true)
+@Preview(device = "id:pixel_5", showSystemUi = false, showBackground = true)
 @Composable
 fun MusicPlayerControlsPreview() {
     MusicPlayerControls(
@@ -129,6 +151,7 @@ fun MusicPlayerControlsPreview() {
         progress = 0.7f,
         onPlayPauseClick = {},
         onPreviousClick = {},
-        onNextClick = {}
+        onNextClick = {},
+        onIncreaseClick = {}
     )
 }

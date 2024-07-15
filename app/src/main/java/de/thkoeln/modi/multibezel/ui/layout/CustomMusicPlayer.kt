@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
+import de.thkoeln.modi.multibezel.ui.compose.IncreaseSpeedButton
 import de.thkoeln.modi.multibezel.ui.compose.MusicPlayerControls
 import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
 
@@ -42,7 +43,8 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
         isPlaying = isPlaying ?: false,
         progress = progress,
         onPreviousClick = { customMusicPlayerViewModel.onPreviousSong() },
-        onNextClick = { customMusicPlayerViewModel.onNextSong() }
+        onNextClick = { customMusicPlayerViewModel.onNextSong() },
+        onIncreaseClick = { customMusicPlayerViewModel.increasePitch()}
     )
 }
 
@@ -55,6 +57,7 @@ fun CustomMusicPlayerScreen(
     onPlayPauseClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onIncreaseClick: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -85,8 +88,15 @@ fun CustomMusicPlayerScreen(
             progress = progress,
             onPlayPauseClick = onPlayPauseClick,
             onPreviousClick = onPreviousClick,
-            onNextClick = onNextClick
+            onNextClick = onNextClick,
+            onIncreaseClick = onIncreaseClick
         )
+
+        IncreaseSpeedButton(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            onIncreaseClick()
+        }
     }
 }
 
@@ -101,6 +111,7 @@ fun CustomMusicPlayerPreview() {
         onPlayPauseClick = { isPlaying = !isPlaying },
         progress = 0.4f,
         onPreviousClick = {},
-        onNextClick = {}
+        onNextClick = {},
+        onIncreaseClick = {}
     )
 }

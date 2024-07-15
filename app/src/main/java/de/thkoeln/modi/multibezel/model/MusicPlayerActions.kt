@@ -12,4 +12,9 @@ interface MusicPlayerActions {
     fun previousSong()
 
     fun isPlaying(): Boolean
+
+    fun changePitch(newPitch: Float)
+
+    fun changeSpeed(newSpeed: Float)
+
 }

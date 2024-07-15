@@ -2,6 +2,7 @@ package de.thkoeln.modi.multibezel.model
 
 import android.content.res.AssetManager
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -130,17 +131,36 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
         currentSongIndex = (currentSongIndex + 1) % songs.size
         stop()
         prepareSong(songs[currentSongIndex])
+        play()
+
+
     }
 
     override fun previousSong() {
         currentSongIndex = (currentSongIndex - 1 + songs.size) % songs.size
         stop()
         prepareSong(songs[currentSongIndex])
+        play()
     }
 
     override fun isPlaying(): Boolean {
         return mediaPlayer.isPlaying
     }
+
+    override fun changeSpeed(newSpeed: Float) {
+        val currentSpeed = mediaPlayer.playbackParams.speed
+        val params = PlaybackParams()
+        params.setSpeed(currentSpeed + newSpeed)
+        mediaPlayer.playbackParams = params
+    }
+
+    override fun changePitch(newPitch: Float) {
+        val currentPitch = mediaPlayer.playbackParams.pitch
+        val params = PlaybackParams()
+        params.setPitch(currentPitch + newPitch)
+        mediaPlayer.playbackParams = params
+    }
+
 
     // TODO: Add other methods like seekTo, setVolume, ...
 }
