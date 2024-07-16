@@ -1,0 +1,46 @@
+package de.thkoeln.modi.multibezel.model
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.isActive
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+
+class Receiver() {
+    private var udpSocket = DatagramSocket(44444)
+
+    fun receiveData(): Flow<IntArray> = flow {
+        val receivingBuffer = ByteArray(1024)
+        while (currentCoroutineContext().isActive) {
+            try {
+                if (udpSocket.isClosed) connect()
+                val packet = DatagramPacket(receivingBuffer, receivingBuffer.size)
+                udpSocket.receive(packet)
+
+                val buffer = ByteBuffer.wrap(packet.data).order(ByteOrder.LITTLE_ENDIAN)
+
+                val receivedArray = IntArray(9)
+                for (i in receivedArray.indices) {
+                    receivedArray[i] = buffer.int
+                }
+
+                emit(receivedArray)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+        .onCompletion { udpSocket.close() }
+        .cancellable()
+
+    private fun connect() {
+        udpSocket = DatagramSocket(44444)
+    }
+}
