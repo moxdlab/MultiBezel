@@ -35,15 +35,17 @@ class CustomMusicPlayerViewModel : ViewModel() {
         startCollectingData()
     }
 
-    fun startCollectingData(){
+    private fun startCollectingData() {
         val actionHandler = ActionHandler()
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             _incomingData.collect {
                 when (actionHandler.handleParsedData(it)) {
                     Action.None -> {}
                     Action.PlayPause -> playPause()
-                    Action.Previous -> previousSong()
-                    Action.Skip -> nextSong()
+                    Action.DecreaseVolume -> decreaseVolume()
+                    Action.IncreaseVolume -> increaseVolume()
+                    Action.NextSong -> nextSong()
+                    Action.PreviousSong -> previousSong()
                 }
             }
         }
@@ -77,11 +79,21 @@ class CustomMusicPlayerViewModel : ViewModel() {
         _musicPlayerActions.value?.previousSong()
         _isPlaying.postValue(true)
     }
+
     fun increaseSpeed() {
         _musicPlayerActions.value?.changeSpeed(0.10f)
     }
+
     fun increasePitch() {
         _musicPlayerActions.value?.changePitch(0.10f)
+    }
+
+    fun decreaseVolume(){
+        _musicPlayerActions.value?.changeVolume(-0.05f)
+    }
+
+    fun increaseVolume(){
+        _musicPlayerActions.value?.changeVolume(0.05f)
     }
 }
 

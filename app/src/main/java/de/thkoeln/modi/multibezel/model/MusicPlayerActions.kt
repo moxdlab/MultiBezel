@@ -17,4 +17,6 @@ interface MusicPlayerActions {
 
     fun changeSpeed(newSpeed: Float)
 
+    fun changeVolume(volumeChange: Float)
+
 }

@@ -18,6 +18,11 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
     private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var currentSongIndex: Int = 0
     private val songs: MutableList<Song> = mutableListOf()
+    private val maxVolume = 1f
+    private var currentVolume = 0.5F
+        set(value) = if (value in 0F..<maxVolume) field = value else if (value <= 0F) field =
+            0F else {
+        }
 
     private val _currentSong = MutableLiveData<Song?>(null)
     val currentSong: LiveData<Song?> = _currentSong
@@ -152,6 +157,12 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
         val params = PlaybackParams()
         params.setSpeed(currentSpeed + newSpeed)
         mediaPlayer.playbackParams = params
+    }
+
+    override fun changeVolume(volumeChange: Float) {
+        currentVolume += volumeChange
+        Log.d("VOLUME", currentVolume.toString())
+        mediaPlayer.setVolume(currentVolume, currentVolume)
     }
 
     override fun changePitch(newPitch: Float) {
