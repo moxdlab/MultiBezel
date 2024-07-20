@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,13 +72,17 @@ fun CustomMusicPlayerScreen(
                 text = songTitle,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(1.dp))
             Text(
                 text = artist,
                 fontSize = 14.sp,
-                color = Color.LightGray
+                color = Color.LightGray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
@@ -105,7 +110,7 @@ fun CustomMusicPlayerScreen(
 fun CustomMusicPlayerPreview() {
     var isPlaying by remember { mutableStateOf(false) }
     CustomMusicPlayerScreen(
-        songTitle = "Africa",
+        songTitle = "This is a really long songname",
         artist = "Toto",
         isPlaying = isPlaying,
         onPlayPauseClick = { isPlaying = !isPlaying },

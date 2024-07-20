@@ -21,8 +21,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
     private val maxVolume = 1f
     private var currentVolume = 0.5F
         set(value) = if (value in 0F..<maxVolume) field = value else if (value <= 0F) field =
-            0F else {
-        }
+            0F else { }
 
     private val _currentSong = MutableLiveData<Song?>(null)
     val currentSong: LiveData<Song?> = _currentSong
@@ -30,7 +29,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
     private val _progress = MutableLiveData(0f)
     val progress: LiveData<Float> = _progress
 
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private var progressJob: Job? = null
 
     init {
@@ -47,7 +46,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
             val assetFiles = assetManager.list("")
             assetFiles?.forEach { fileName ->
                 if (fileName.endsWith(".mp3", true)) {
-                    val pattern = Regex("(.+) - (.+) \\[.+\\]\\.mp3")
+                    val pattern = Regex("^(.*?) - (.*)\\.mp3")
                     val matchResult = pattern.find(fileName)
 
                     val song = if (matchResult != null) {
@@ -161,7 +160,6 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
 
     override fun changeVolume(volumeChange: Float) {
         currentVolume += volumeChange
-        Log.d("VOLUME", currentVolume.toString())
         mediaPlayer.setVolume(currentVolume, currentVolume)
     }
 
