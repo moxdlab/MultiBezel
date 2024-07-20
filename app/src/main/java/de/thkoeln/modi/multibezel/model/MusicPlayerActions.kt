@@ -1,6 +1,8 @@
 package de.thkoeln.modi.multibezel.model
 
 interface MusicPlayerActions {
+    var currentVolume: Float
+
     fun play()
 
     fun pause()
@@ -18,5 +20,4 @@ interface MusicPlayerActions {
     fun changeSpeed(newSpeed: Float)
 
     fun changeVolume(volumeChange: Float)
-
 }

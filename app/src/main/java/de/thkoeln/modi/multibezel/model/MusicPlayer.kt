@@ -19,7 +19,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
     private var currentSongIndex: Int = 0
     private val songs: MutableList<Song> = mutableListOf()
     private val maxVolume = 1f
-    private var currentVolume = 0.5F
+    override var currentVolume = 0.5F
         set(value) = if (value in 0F..<maxVolume) field = value else if (value <= 0F) field =
             0F else { }
 
@@ -136,8 +136,6 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
         stop()
         prepareSong(songs[currentSongIndex])
         play()
-
-
     }
 
     override fun previousSong() {
@@ -169,7 +167,4 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
         params.setPitch(currentPitch + newPitch)
         mediaPlayer.playbackParams = params
     }
-
-
-    // TODO: Add other methods like seekTo, setVolume, ...
 }

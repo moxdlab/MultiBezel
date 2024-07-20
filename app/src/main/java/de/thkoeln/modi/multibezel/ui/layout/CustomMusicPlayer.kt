@@ -1,5 +1,6 @@
 package de.thkoeln.modi.multibezel.ui.layout
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
-import de.thkoeln.modi.multibezel.ui.compose.IncreaseSpeedButton
 import de.thkoeln.modi.multibezel.ui.compose.MusicPlayerControls
+import de.thkoeln.modi.multibezel.ui.compose.VolumeBar
 import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
 
 @Composable
@@ -33,6 +34,7 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
     customMusicPlayerViewModel.initMusicPlayer(LocalContext.current)
     val isPlaying by customMusicPlayerViewModel.isPlaying.observeAsState(false)
     val progress by customMusicPlayerViewModel.progress.observeAsState(0F)
+    val volume by customMusicPlayerViewModel.volume.observeAsState(0F)
     val song by customMusicPlayerViewModel.currentSong.observeAsState()
 
     CustomMusicPlayerScreen(
@@ -43,6 +45,7 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
         },
         isPlaying = isPlaying ?: false,
         progress = progress,
+        volume = volume,
         onPreviousClick = { customMusicPlayerViewModel.previousSong() },
         onNextClick = { customMusicPlayerViewModel.nextSong() },
         onIncreaseClick = { customMusicPlayerViewModel.increasePitch() }
@@ -53,6 +56,7 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
 fun CustomMusicPlayerScreen(
     isPlaying: Boolean,
     progress: Float,
+    volume: Float,
     songTitle: String,
     artist: String,
     onPlayPauseClick: () -> Unit,
@@ -63,44 +67,47 @@ fun CustomMusicPlayerScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.TopCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.Center)
+                .padding(horizontal = 25.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = songTitle,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = songTitle,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(1.dp))
+                Text(
+                    text = artist,
+                    fontSize = 14.sp,
+                    color = Color.LightGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            MusicPlayerControls(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                isPlaying = isPlaying,
+                progress = progress,
+                onPlayPauseClick = onPlayPauseClick,
+                onPreviousClick = onPreviousClick,
+                onNextClick = onNextClick,
+                onIncreaseClick = onIncreaseClick
             )
-            Spacer(modifier = Modifier.height(1.dp))
-            Text(
-                text = artist,
-                fontSize = 14.sp,
-                color = Color.LightGray,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        MusicPlayerControls(
-            modifier = Modifier
-                .align(Alignment.Center),
-            isPlaying = isPlaying,
-            progress = progress,
-            onPlayPauseClick = onPlayPauseClick,
-            onPreviousClick = onPreviousClick,
-            onNextClick = onNextClick,
-            onIncreaseClick = onIncreaseClick
-        )
-
-        IncreaseSpeedButton(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            onIncreaseClick()
+            VolumeBar(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                volume = volume
+            ) {}
         }
     }
 }
@@ -115,6 +122,7 @@ fun CustomMusicPlayerPreview() {
         isPlaying = isPlaying,
         onPlayPauseClick = { isPlaying = !isPlaying },
         progress = 0.4f,
+        volume = 0.6f,
         onPreviousClick = {},
         onNextClick = {},
         onIncreaseClick = {}

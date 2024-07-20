@@ -26,6 +26,9 @@ class CustomMusicPlayerViewModel : ViewModel() {
     private val _progress: MutableLiveData<Float> = MutableLiveData(0F)
     val progress: LiveData<Float> = _progress
 
+    private val _volume: MutableLiveData<Float> = MutableLiveData(0F)
+    val volume: LiveData<Float> = _volume
+
     private val _isPlaying: MutableLiveData<Boolean> = MutableLiveData(false)
     val isPlaying: LiveData<Boolean?> = _isPlaying
 
@@ -90,10 +93,12 @@ class CustomMusicPlayerViewModel : ViewModel() {
 
     fun decreaseVolume(){
         _musicPlayerActions.value?.changeVolume(-0.05f)
+        _volume.postValue(_musicPlayerActions.value?.currentVolume)
     }
 
     fun increaseVolume(){
         _musicPlayerActions.value?.changeVolume(0.05f)
+        _volume.postValue(_musicPlayerActions.value?.currentVolume)
     }
 }
 
