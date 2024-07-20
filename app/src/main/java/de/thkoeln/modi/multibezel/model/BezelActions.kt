@@ -24,33 +24,39 @@ class ActionHandler {
     private val songThreshold = 300F
     private val volumeThreshold = 200F
 
+    private fun handleGesture(
+        parsedData: ParsedData,
+        fingerCount: Int,
+        threshold: Float,
+        positiveAction: Action,
+        negativeAction: Action
+    ): Action {
+        if (parsedData.numberOfFingers != fingerCount) return Action.None
+
+        val delta = parsedData.calculateDeltaToOtherData(lastParsedData)
+        currentDeltaSum += delta
+
+        return if (currentDeltaSum.absoluteValue >= threshold) {
+            currentDeltaSum = 0F
+            if (delta < 0f) negativeAction else positiveAction
+        } else Action.None
+    }
+
     fun handleParsedData(parsedData: ParsedData): Action {
         val action = when {
             lastParsedData?.numberOfFingers != 3 && parsedData.numberOfFingers >= 3 -> {
                 Action.PlayPause
             }
 
-            parsedData.numberOfFingers == 2 -> {
-                val delta = parsedData.calculateDeltaToOtherData(lastParsedData)
-                currentDeltaSum += delta
-                if (currentDeltaSum.absoluteValue >= songThreshold) {
-                    currentDeltaSum = 0F
-                    if (delta < 0f) Action.PreviousSong else Action.NextSong
-                } else Action.None
-            }
-
-            parsedData.numberOfFingers == 1 && (lastParsedData?.numberOfFingers == 1 || lastParsedData?.numberOfFingers == 0) -> {
-                val delta = parsedData.calculateDeltaToOtherData(parsedDataHistory.lastOrNull())
-                currentDeltaSum += delta
-                if (currentDeltaSum.absoluteValue >= volumeThreshold) {
-                    currentDeltaSum = 0F
-                    if (delta < 0f) Action.DecreaseVolume else Action.IncreaseVolume
-                } else Action.None
-            }
-
-            else -> {
-                currentDeltaSum = 0F
-                Action.None
+            else ->  {
+                when (parsedData.numberOfFingers) {
+                    2 -> handleGesture(parsedData, 2, songThreshold, Action.NextSong, Action.PreviousSong)
+                    1 -> handleGesture(parsedData, 1, volumeThreshold, Action.IncreaseVolume, Action.DecreaseVolume)
+                    else -> {
+                        currentDeltaSum = 0F
+                        Action.None
+                    }
+                }
             }
         }
 
