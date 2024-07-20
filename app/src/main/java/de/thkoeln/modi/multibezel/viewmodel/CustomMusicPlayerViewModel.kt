@@ -4,9 +4,17 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import de.thkoeln.modi.multibezel.model.Action
+import de.thkoeln.modi.multibezel.model.ActionHandler
 import de.thkoeln.modi.multibezel.model.MusicPlayer
 import de.thkoeln.modi.multibezel.model.MusicPlayerActions
+import de.thkoeln.modi.multibezel.model.ParsedData
+import de.thkoeln.modi.multibezel.model.Receiver
 import de.thkoeln.modi.multibezel.model.Song
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 class CustomMusicPlayerViewModel : ViewModel() {
     private val _musicPlayerActions: MutableLiveData<MusicPlayerActions> = MutableLiveData(null)
@@ -20,6 +28,26 @@ class CustomMusicPlayerViewModel : ViewModel() {
 
     private val _isPlaying: MutableLiveData<Boolean> = MutableLiveData(false)
     val isPlaying: LiveData<Boolean?> = _isPlaying
+
+    private val _incomingData = Receiver().receiveData().map { ParsedData(it) }
+
+    init {
+        startCollectingData()
+    }
+
+    fun startCollectingData(){
+        val actionHandler = ActionHandler()
+        viewModelScope.launch(Dispatchers.IO){
+            _incomingData.collect {
+                when (actionHandler.handleParsedData(it)) {
+                    Action.None -> {}
+                    Action.PlayPause -> playPause()
+                    Action.Previous -> previousSong()
+                    Action.Skip -> nextSong()
+                }
+            }
+        }
+    }
 
     fun initMusicPlayer(context: Context) {
         if (_musicPlayerActions.value == null) {
@@ -40,12 +68,12 @@ class CustomMusicPlayerViewModel : ViewModel() {
         }
     }
 
-    fun onNextSong() {
+    fun nextSong() {
         _musicPlayerActions.value?.nextSong()
         _isPlaying.postValue(true)
     }
 
-    fun onPreviousSong() {
+    fun previousSong() {
         _musicPlayerActions.value?.previousSong()
         _isPlaying.postValue(true)
     }

@@ -70,7 +70,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
                 assetFileDescriptor.startOffset,
                 assetFileDescriptor.length
             )
-            _currentSong.value = song
+            _currentSong.postValue(song)
             mediaPlayer.setOnCompletionListener {
                 stopProgressUpdates()
                 nextSong()
@@ -90,7 +90,7 @@ class MusicPlayer(private val assetManager: AssetManager) : MusicPlayerActions {
                     val currentPosition = mediaPlayer.currentPosition.toFloat()
                     val totalDuration = mediaPlayer.duration.toFloat()
                     val progress = if (totalDuration > 0) currentPosition / totalDuration else 0f
-                    _progress.value = progress
+                    _progress.postValue(progress)
                 }
                 delay(100)
             }

@@ -16,7 +16,7 @@ import java.nio.ByteOrder
 class Receiver() {
     private var udpSocket = DatagramSocket(44444)
 
-    fun receiveData(): Flow<IntArray> = flow {
+    fun receiveData(): Flow<List<Int>> = flow {
         val receivingBuffer = ByteArray(1024)
         while (currentCoroutineContext().isActive) {
             try {
@@ -26,12 +26,11 @@ class Receiver() {
 
                 val buffer = ByteBuffer.wrap(packet.data).order(ByteOrder.LITTLE_ENDIAN)
 
-                val receivedArray = IntArray(9)
-                for (i in receivedArray.indices) {
-                    receivedArray[i] = buffer.int
+                val receivedList = mutableListOf<Int>()
+                repeat(6) {
+                    receivedList.add(buffer.int)
                 }
-
-                emit(receivedArray)
+                emit(receivedList)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

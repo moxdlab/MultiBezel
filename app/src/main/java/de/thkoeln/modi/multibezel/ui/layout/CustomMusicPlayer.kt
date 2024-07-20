@@ -42,9 +42,9 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
         },
         isPlaying = isPlaying ?: false,
         progress = progress,
-        onPreviousClick = { customMusicPlayerViewModel.onPreviousSong() },
-        onNextClick = { customMusicPlayerViewModel.onNextSong() },
-        onIncreaseClick = { customMusicPlayerViewModel.increasePitch()}
+        onPreviousClick = { customMusicPlayerViewModel.previousSong() },
+        onNextClick = { customMusicPlayerViewModel.nextSong() },
+        onIncreaseClick = { customMusicPlayerViewModel.increasePitch() }
     )
 }
 
