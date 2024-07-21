@@ -21,7 +21,7 @@ class ActionHandler {
         get() = actionHistory.lastOrNull()
 
     private var currentDeltaSum = 0F
-    private val songThreshold = 300F
+    private val songThreshold = 100F
     private val volumeThreshold = 200F
 
     private fun handleGesture(
@@ -34,6 +34,7 @@ class ActionHandler {
         if (parsedData.numberOfFingers != fingerCount) return Action.None
 
         val delta = parsedData.calculateDeltaToOtherData(lastParsedData)
+        if (lastParsedData?.numberOfFingers != fingerCount) currentDeltaSum = 0F
         currentDeltaSum += delta
 
         return if (currentDeltaSum.absoluteValue >= threshold) {
@@ -48,10 +49,24 @@ class ActionHandler {
                 Action.PlayPause
             }
 
-            else ->  {
+            else -> {
                 when (parsedData.numberOfFingers) {
-                    2 -> handleGesture(parsedData, 2, songThreshold, Action.NextSong, Action.PreviousSong)
-                    1 -> handleGesture(parsedData, 1, volumeThreshold, Action.IncreaseVolume, Action.DecreaseVolume)
+                    2 -> handleGesture(
+                        parsedData,
+                        2,
+                        songThreshold,
+                        Action.NextSong,
+                        Action.PreviousSong
+                    )
+
+                    1 -> handleGesture(
+                        parsedData,
+                        1,
+                        volumeThreshold,
+                        Action.IncreaseVolume,
+                        Action.DecreaseVolume
+                    )
+
                     else -> {
                         currentDeltaSum = 0F
                         Action.None
