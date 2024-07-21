@@ -10,17 +10,15 @@ fun AppComposable() {
     val swipeDismissibleNavController = rememberSwipeDismissableNavController()
 
     SwipeDismissableNavHost(
-        navController = swipeDismissibleNavController,
-        startDestination = Screen.MusicPlayer.route
+        navController = swipeDismissibleNavController, startDestination = Screen.Welcome.route
     ) {
         composable(route = Screen.Welcome.route) {
-            Welcome()
+            Welcome(navigateMusicPlayer = { swipeDismissibleNavController.navigate(Screen.MusicPlayer.route) })
         }
         composable(route = Screen.MusicPlayer.route) {
             CustomMusicPlayerScreen()
         }
-        composable(route = Screen.TestPlayer.route) {
-        }
+        composable(route = Screen.TestPlayer.route) {}
     }
 }
 

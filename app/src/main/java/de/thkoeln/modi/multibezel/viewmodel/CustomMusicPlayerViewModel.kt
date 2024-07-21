@@ -1,6 +1,8 @@
 package de.thkoeln.modi.multibezel.viewmodel
 
 import android.content.Context
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class CustomMusicPlayerViewModel : ViewModel() {
     private val _musicPlayerActions: MutableLiveData<MusicPlayerActions> = MutableLiveData(null)
-    val musicPlayerActions: LiveData<MusicPlayerActions> = _musicPlayerActions
+    private val _hapticFeedback: MutableLiveData<HapticFeedback> = MutableLiveData()
 
     private val _currentSong: MutableLiveData<Song?> = MutableLiveData(null)
     val currentSong: LiveData<Song?> = _currentSong
@@ -38,6 +40,11 @@ class CustomMusicPlayerViewModel : ViewModel() {
         startCollectingData()
     }
 
+    override fun onCleared() {
+        _musicPlayerActions.value?.stop()
+        super.onCleared()
+    }
+
     private fun startCollectingData() {
         val actionHandler = ActionHandler()
         viewModelScope.launch(Dispatchers.IO) {
@@ -54,16 +61,18 @@ class CustomMusicPlayerViewModel : ViewModel() {
         }
     }
 
-    fun initMusicPlayer(context: Context) {
-        if (_musicPlayerActions.value == null) {
+    fun initMusicPlayer(context: Context, hapticFeedback: HapticFeedback) {
+        if (_musicPlayerActions.value == null && _hapticFeedback.value == null) {
+            _hapticFeedback.postValue(hapticFeedback)
             val musicPlayer = MusicPlayer(context.assets)
-            _musicPlayerActions.value = musicPlayer
+            _musicPlayerActions.postValue(musicPlayer)
             musicPlayer.currentSong.observeForever { _currentSong.value = it }
             musicPlayer.progress.observeForever { _progress.value = it }
         }
     }
 
     fun playPause() {
+        _hapticFeedback.value?.performHapticFeedback(HapticFeedbackType.LongPress)
         if (_musicPlayerActions.value?.isPlaying() == true) {
             _isPlaying.postValue(false)
             _musicPlayerActions.value?.pause()
@@ -74,11 +83,13 @@ class CustomMusicPlayerViewModel : ViewModel() {
     }
 
     fun nextSong() {
+        _hapticFeedback.value?.performHapticFeedback(HapticFeedbackType.LongPress)
         _musicPlayerActions.value?.nextSong()
         _isPlaying.postValue(true)
     }
 
     fun previousSong() {
+        _hapticFeedback.value?.performHapticFeedback(HapticFeedbackType.LongPress)
         _musicPlayerActions.value?.previousSong()
         _isPlaying.postValue(true)
     }
@@ -91,12 +102,14 @@ class CustomMusicPlayerViewModel : ViewModel() {
         _musicPlayerActions.value?.changePitch(0.10f)
     }
 
-    fun decreaseVolume(){
+    fun decreaseVolume() {
+        _hapticFeedback.value?.performHapticFeedback(HapticFeedbackType.LongPress)
         _musicPlayerActions.value?.changeVolume(-0.05f)
         _volume.postValue(_musicPlayerActions.value?.currentVolume)
     }
 
-    fun increaseVolume(){
+    fun increaseVolume() {
+        _hapticFeedback.value?.performHapticFeedback(HapticFeedbackType.LongPress)
         _musicPlayerActions.value?.changeVolume(0.05f)
         _volume.postValue(_musicPlayerActions.value?.currentVolume)
     }

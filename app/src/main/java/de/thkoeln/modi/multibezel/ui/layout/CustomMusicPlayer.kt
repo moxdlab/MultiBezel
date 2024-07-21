@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +32,7 @@ import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
 
 @Composable
 fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewModel = viewModel()) {
-    customMusicPlayerViewModel.initMusicPlayer(LocalContext.current)
+    customMusicPlayerViewModel.initMusicPlayer(LocalContext.current, LocalHapticFeedback.current)
     val isPlaying by customMusicPlayerViewModel.isPlaying.observeAsState(false)
     val progress by customMusicPlayerViewModel.progress.observeAsState(0F)
     val volume by customMusicPlayerViewModel.volume.observeAsState(0F)
