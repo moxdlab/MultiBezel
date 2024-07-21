@@ -3,7 +3,7 @@ package de.thkoeln.modi.multibezel.model
 
 class ParsedData(private val rawData: List<Int>) {
     val numberOfFingers = rawData.lastOrNull() ?: 0
-    private val fingerPositions: List<Int>
+    val fingerPositions: List<Int>
         get() = (0 until numberOfFingers).map { rawData[it] }
 
     fun calculateDeltaToOtherData(otherParsedData: ParsedData?): Float {

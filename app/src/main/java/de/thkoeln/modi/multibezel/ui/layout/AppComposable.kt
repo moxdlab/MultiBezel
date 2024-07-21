@@ -13,12 +13,17 @@ fun AppComposable() {
         navController = swipeDismissibleNavController, startDestination = Screen.Welcome.route
     ) {
         composable(route = Screen.Welcome.route) {
-            Welcome(navigateMusicPlayer = { swipeDismissibleNavController.navigate(Screen.MusicPlayer.route) })
+            Welcome(
+                navigateMusicPlayer = { swipeDismissibleNavController.navigate(Screen.MusicPlayer.route) },
+                navigateRawData = {swipeDismissibleNavController.navigate(Screen.RawData.route)}
+                )
         }
         composable(route = Screen.MusicPlayer.route) {
             CustomMusicPlayerScreen()
         }
-        composable(route = Screen.TestPlayer.route) {}
+        composable(route = Screen.RawData.route) {
+            SensorSections()
+        }
     }
 }
 
@@ -27,5 +32,5 @@ sealed class Screen(
 ) {
     data object Welcome : Screen("welcome")
     data object MusicPlayer : Screen("player")
-    data object TestPlayer : Screen("test")
+    data object RawData : Screen("rawdata")
 }
