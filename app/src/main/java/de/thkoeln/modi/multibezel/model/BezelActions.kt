@@ -45,7 +45,7 @@ class ActionHandler {
 
     fun handleParsedData(parsedData: ParsedData): Action {
         val action = when {
-            lastParsedData?.numberOfFingers != 3 && parsedData.numberOfFingers >= 3 -> {
+            (lastParsedData?.numberOfFingers ?: 0) < 3 && parsedData.numberOfFingers >= 3 -> {
                 Action.PlayPause
             }
 
