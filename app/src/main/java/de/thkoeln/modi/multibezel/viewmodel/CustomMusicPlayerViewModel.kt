@@ -41,8 +41,8 @@ class CustomMusicPlayerViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-        _musicPlayerActions.value?.stop()
         super.onCleared()
+        _musicPlayerActions.value?.stop()
     }
 
     private fun startCollectingData() {

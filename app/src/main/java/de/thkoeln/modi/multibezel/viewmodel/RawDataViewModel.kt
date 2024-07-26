@@ -28,16 +28,15 @@ class RawDataViewModel : ViewModel() {
         val newSensorStates = mutableListOf(0, 0, 0, 0, 0, 0, 0, 0)
 
         for (position in parsedData.fingerPositions) {
-            val index = when {
-                position < 100 -> 1
-                position < 200 -> 0
-                position < 300 -> 7
-                position < 400 -> 6
-                position < 500 -> 5
-                position < 600 -> 4
-                position < 700 -> 3
-                position < 800 -> 2
-                else -> continue // Ignore values outside the defined ranges
+            val index = when (position) {
+                in -1..99 -> 1
+                in 100..199 -> 0
+                in 200..299 -> 7
+                in 300..399 -> 6
+                in 400..499 -> 5
+                in 500..599 -> 4
+                in 600..699 -> 3
+                else -> 2
             }
             newSensorStates[index] = 1
         }

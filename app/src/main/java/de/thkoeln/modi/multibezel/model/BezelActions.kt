@@ -33,7 +33,9 @@ class ActionHandler {
     ): Action {
         if (parsedData.numberOfFingers != fingerCount) return Action.None
 
-        val delta = parsedData.calculateDeltaToOtherData(lastParsedData)
+        var delta = parsedData.calculateDeltaToOtherData(lastParsedData)
+        if(delta > 100f) delta = 5f
+        if(delta < -100f) delta = -5f
         if (lastParsedData?.numberOfFingers != fingerCount) currentDeltaSum = 0F
         currentDeltaSum += delta
 

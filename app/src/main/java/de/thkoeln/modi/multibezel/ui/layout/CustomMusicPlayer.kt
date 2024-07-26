@@ -3,11 +3,13 @@ package de.thkoeln.modi.multibezel.ui.layout
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,16 +28,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
+import de.thkoeln.modi.multibezel.ui.compose.LockIcon
 import de.thkoeln.modi.multibezel.ui.compose.MusicPlayerControls
+import de.thkoeln.modi.multibezel.ui.compose.NavigateBack
 import de.thkoeln.modi.multibezel.ui.compose.VolumeBar
+import de.thkoeln.modi.multibezel.ui.compose.gesturesDisabled
 import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
 
 @Composable
-fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewModel = viewModel()) {
+fun CustomMusicPlayerScreen(
+    customMusicPlayerViewModel: CustomMusicPlayerViewModel = viewModel(),
+    navigateBack: () -> Unit
+) {
     customMusicPlayerViewModel.initMusicPlayer(LocalContext.current, LocalHapticFeedback.current)
     val isPlaying by customMusicPlayerViewModel.isPlaying.observeAsState(false)
     val progress by customMusicPlayerViewModel.progress.observeAsState(0F)
-    val volume by customMusicPlayerViewModel.volume.observeAsState(0F)
+    val volume by customMusicPlayerViewModel.volume.observeAsState(0.5F)
     val song by customMusicPlayerViewModel.currentSong.observeAsState()
 
     CustomMusicPlayerScreen(
@@ -49,7 +57,8 @@ fun CustomMusicPlayerScreen(customMusicPlayerViewModel: CustomMusicPlayerViewMod
         volume = volume,
         onPreviousClick = { customMusicPlayerViewModel.previousSong() },
         onNextClick = { customMusicPlayerViewModel.nextSong() },
-        onIncreaseClick = { customMusicPlayerViewModel.increasePitch() }
+        onIncreaseClick = { customMusicPlayerViewModel.increasePitch() },
+        onBackClick = { navigateBack() }
     )
 }
 
@@ -63,8 +72,10 @@ fun CustomMusicPlayerScreen(
     onPlayPauseClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
-    onIncreaseClick: () -> Unit
+    onIncreaseClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
+    var touchIsBlocked by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -75,9 +86,27 @@ fun CustomMusicPlayerScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 16.dp, start = 8.dp, end = 8.dp),
+                    .padding(top = 8.dp, bottom = 1.dp, start = 8.dp, end = 8.dp)
+                    .gesturesDisabled(touchIsBlocked),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    NavigateBack(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .gesturesDisabled(touchIsBlocked)
+                    ) { onBackClick() }
+                    LockIcon(
+                        modifier = Modifier.size(14.dp),
+                        isLocked = touchIsBlocked
+                    ) { touchIsBlocked = !touchIsBlocked }
+                }
                 Text(
                     text = songTitle,
                     fontSize = 16.sp,
@@ -97,7 +126,8 @@ fun CustomMusicPlayerScreen(
             }
             MusicPlayerControls(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .gesturesDisabled(touchIsBlocked),
                 isPlaying = isPlaying,
                 progress = progress,
                 onPlayPauseClick = onPlayPauseClick,
@@ -106,7 +136,9 @@ fun CustomMusicPlayerScreen(
                 onIncreaseClick = onIncreaseClick
             )
             VolumeBar(
-                modifier = Modifier.padding(horizontal = 10.dp),
+                modifier = Modifier
+                    .gesturesDisabled(touchIsBlocked)
+                    .padding(horizontal = 10.dp),
                 volume = volume
             ) {}
         }
@@ -118,7 +150,7 @@ fun CustomMusicPlayerScreen(
 fun CustomMusicPlayerPreview() {
     var isPlaying by remember { mutableStateOf(false) }
     CustomMusicPlayerScreen(
-        songTitle = "This is a really long songname",
+        songTitle = "Africa",
         artist = "Toto",
         isPlaying = isPlaying,
         onPlayPauseClick = { isPlaying = !isPlaying },
@@ -126,6 +158,7 @@ fun CustomMusicPlayerPreview() {
         volume = 0.6f,
         onPreviousClick = {},
         onNextClick = {},
-        onIncreaseClick = {}
+        onIncreaseClick = {},
+        onBackClick = {}
     )
 }

@@ -13,8 +13,9 @@ import java.net.DatagramSocket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
+private var udpSocket = DatagramSocket(44444)
+
 class Receiver() {
-    private var udpSocket = DatagramSocket(44444)
 
     fun receiveData(): Flow<List<Int>> = flow {
         val receivingBuffer = ByteArray(1024)

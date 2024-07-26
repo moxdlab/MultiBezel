@@ -14,12 +14,16 @@ fun AppComposable() {
     ) {
         composable(route = Screen.Welcome.route) {
             Welcome(
-                navigateMusicPlayer = { swipeDismissibleNavController.navigate(Screen.MusicPlayer.route) },
+                navigateMusicPlayer = { swipeDismissibleNavController.navigate(Screen.MusicPlayer.route){
+                    popUpTo(0)
+                } },
                 navigateRawData = {swipeDismissibleNavController.navigate(Screen.RawData.route)}
                 )
         }
         composable(route = Screen.MusicPlayer.route) {
-            CustomMusicPlayerScreen()
+            CustomMusicPlayerScreen(
+                navigateBack = { swipeDismissibleNavController.navigate(Screen.Welcome.route) }
+            )
         }
         composable(route = Screen.RawData.route) {
             SensorSections()
