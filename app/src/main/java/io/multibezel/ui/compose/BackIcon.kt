@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.compose
+package io.multibezel.ui.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.thkoeln.modi.multibezel.R
+import io.multibezel.R
 
 @Composable
 fun NavigateBack(

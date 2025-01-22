@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.layout
+package io.multibezel.ui.layout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.model
+package io.multibezel.model
 
 interface MusicPlayerActions {
     var currentVolume: Float

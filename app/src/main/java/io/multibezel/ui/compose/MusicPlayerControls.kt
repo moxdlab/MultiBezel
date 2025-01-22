@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.compose
+package io.multibezel.ui.compose
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Icon
-import de.thkoeln.modi.multibezel.R
+import io.multibezel.R
 
 @Composable
 fun MusicControlCircularProgressBar(

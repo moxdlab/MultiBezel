@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.layout
+package io.multibezel.ui.layout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.Text
-import de.thkoeln.modi.multibezel.ui.compose.LockIcon
-import de.thkoeln.modi.multibezel.ui.compose.MusicPlayerControls
-import de.thkoeln.modi.multibezel.ui.compose.NavigateBack
-import de.thkoeln.modi.multibezel.ui.compose.VolumeBar
-import de.thkoeln.modi.multibezel.ui.compose.gesturesDisabled
-import de.thkoeln.modi.multibezel.viewmodel.CustomMusicPlayerViewModel
+import io.multibezel.ui.compose.LockIcon
+import io.multibezel.ui.compose.MusicPlayerControls
+import io.multibezel.ui.compose.NavigateBack
+import io.multibezel.ui.compose.VolumeBar
+import io.multibezel.ui.compose.gesturesDisabled
+import io.multibezel.viewmodel.CustomMusicPlayerViewModel
 
 @Composable
 fun CustomMusicPlayerScreen(

@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.viewmodel
+package io.multibezel.viewmodel
 
 import android.content.Context
 import androidx.compose.ui.hapticfeedback.HapticFeedback
@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.thkoeln.modi.multibezel.model.Action
-import de.thkoeln.modi.multibezel.model.ActionHandler
-import de.thkoeln.modi.multibezel.model.MusicPlayer
-import de.thkoeln.modi.multibezel.model.MusicPlayerActions
-import de.thkoeln.modi.multibezel.model.ParsedData
-import de.thkoeln.modi.multibezel.model.Receiver
-import de.thkoeln.modi.multibezel.model.Song
+import io.multibezel.model.Action
+import io.multibezel.model.ActionHandler
+import io.multibezel.model.MusicPlayer
+import io.multibezel.model.MusicPlayerActions
+import io.multibezel.model.ParsedData
+import io.multibezel.model.Receiver
+import io.multibezel.model.Song
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
