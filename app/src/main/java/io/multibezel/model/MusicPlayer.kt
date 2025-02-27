@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.model
+package io.multibezel.model
 
 import android.content.res.AssetManager
 import android.media.MediaPlayer

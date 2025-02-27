@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.theme
+package io.multibezel.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme

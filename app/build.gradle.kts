@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "de.thkoeln.modi.multibezel"
+    namespace = "io.multibezel"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "de.thkoeln.modi.multibezel"
+        applicationId = "io.multibezel"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -16,7 +16,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
     }
 
     buildTypes {

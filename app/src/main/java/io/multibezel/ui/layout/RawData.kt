@@ -1,4 +1,4 @@
-package de.thkoeln.modi.multibezel.ui.layout
+package io.multibezel.ui.layout
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import de.thkoeln.modi.multibezel.viewmodel.RawDataViewModel
+import io.multibezel.viewmodel.RawDataViewModel
 
 @Composable
 fun SensorSections(rawDataViewModel: RawDataViewModel = viewModel()){
@@ -56,10 +56,12 @@ fun SensorSections(
     }
 }
 
-@Preview(device = "id:wearos_small_round", showBackground = true)
+@Preview(device = "id:wearos_small_round", showBackground = true, showSystemUi = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO or android.content.res.Configuration.UI_MODE_TYPE_WATCH
+)
 @Composable
 fun CircularSectionsPreview() {
-    val sectionStates = listOf(0, 0, 0, 0, 0, 0, 0, 0)
+    val sectionStates = listOf(0, 1, 0, 0, 0, 1, 0, 0)
     SensorSections(sectionStates = sectionStates)
 }
 

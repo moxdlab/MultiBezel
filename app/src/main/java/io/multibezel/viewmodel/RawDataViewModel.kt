@@ -1,11 +1,11 @@
-package de.thkoeln.modi.multibezel.viewmodel
+package io.multibezel.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.thkoeln.modi.multibezel.model.ParsedData
-import de.thkoeln.modi.multibezel.model.Receiver
+import io.multibezel.model.ParsedData
+import io.multibezel.model.Receiver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
